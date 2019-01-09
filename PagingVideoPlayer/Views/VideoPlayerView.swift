@@ -14,6 +14,7 @@ class VideoPlayerView: UIView {
     @IBOutlet private weak var playPauseButton: UIButton!
     @IBOutlet private weak var thumbnailImageView: UIImageView!
     @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet private weak var safePinchRecognizerView: UIView!
     
     private let videoPlayer = VideoPlayer()
     @objc private let avPlayer = AVPlayer()
@@ -21,6 +22,21 @@ class VideoPlayerView: UIView {
     private var playerItemStatusObservationToken: NSKeyValueObservation?
     
     var allowAutoPlay: Bool = false
+    
+    // MARK: - Properties: User initiated player view zooming
+    var needsStretchingBlock: ((Bool) -> Void)?
+    private var viewingMode = ViewingMode.original {
+        didSet {
+            switch viewingMode {
+            case .original:
+                videoPlayer.playerLayer.videoGravity = .resizeAspect
+            case .zoomedToFill:
+                videoPlayer.playerLayer.videoGravity = .resizeAspectFill
+            }
+        }
+    }
+    private var landscapeViewingModePreference = ViewingMode.original
+    // MARK: -
     
     var video: Video? {
         didSet {
@@ -75,6 +91,11 @@ class VideoPlayerView: UIView {
         
         nibView.frame = bounds
         addSubview(nibView)
+        
+        // add pinch gesture recognizer to the safe pinch recognizer view of the nib view
+        let pinchGestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(handlePinchOnsafePinchRecognizerView(sender:)))
+        safePinchRecognizerView.addGestureRecognizer(pinchGestureRecognizer)
+        
         videoPlayer.player = avPlayer
         
         // add AVPlayer observer
@@ -82,7 +103,7 @@ class VideoPlayerView: UIView {
             switch player.timeControlStatus {
             case .paused:
                 self.playPauseButton.isSelected = false
-                self.thumbnailImageView.isHidden = false
+                // self.thumbnailImageView.isHidden = false  // doesn't work well with pinch in to zoom player feature
                 // loading end
                 self.activityIndicator.stopAnimating()
             case .playing:
@@ -99,6 +120,7 @@ class VideoPlayerView: UIView {
         }
         
         NotificationCenter.default.addObserver(self, selector: #selector(playerItemDidPlayToEndTime), name: .AVPlayerItemDidPlayToEndTime, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didRotate), name: UIDevice.orientationDidChangeNotification, object: nil)
     }
     
     override func layoutSubviews() {
@@ -111,6 +133,15 @@ class VideoPlayerView: UIView {
     
     deinit {
         NotificationCenter.default.removeObserver(self, name: .AVPlayerItemDidPlayToEndTime, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
+    }
+    
+    @objc private func didRotate() {
+        if UIApplication.shared.statusBarOrientation.isPortrait {
+            viewingMode = .original
+        } else {
+            viewingMode = landscapeViewingModePreference
+        }
     }
     
 }
@@ -120,7 +151,7 @@ extension VideoPlayerView: NibInitable { }
 
 
 // MARK: - AVPlayer Specifics
-extension VideoPlayerView {
+private extension VideoPlayerView {
     @objc private func playerItemDidPlayToEndTime() {
         avPlayer.seek(to: .zero)
     }
@@ -128,7 +159,7 @@ extension VideoPlayerView {
 
 
 // MARK: - Button Actions
-extension VideoPlayerView {
+private extension VideoPlayerView {
     @IBAction private func playPauseButtonDidTap(_ sender: UIButton) {
         switch sender.isSelected {
         case true:
@@ -141,6 +172,33 @@ extension VideoPlayerView {
     }
 }
 
+// MARK: - Player View Zooming Behavior implementation
+private extension VideoPlayerView {
+    @objc private func handlePinchOnsafePinchRecognizerView(sender: UIPinchGestureRecognizer) {
+        /*
+         *
+        If consumer (the one which added VideoPlayerView as it's subview) actually passed the needsStretchingBlock (meaning, the consumer is capable of providing stretchable area for the VideoPlayerView) only then update the viewing mode. Otherwise don't, because it would make user experience bad.
+        */
+        if let needsStretchingBlock = needsStretchingBlock {
+            if UIApplication.shared.statusBarOrientation.isLandscape {
+                let isZoomInTried = sender.scale > 1
+                needsStretchingBlock(isZoomInTried)
+                if isZoomInTried {
+                    viewingMode = .zoomedToFill
+                } else {
+                    viewingMode = .original
+                }
+                landscapeViewingModePreference = viewingMode
+            }
+        }
+    }
+    
+    private enum ViewingMode {
+        case original
+        case zoomedToFill
+    }
+}
+
 // MARK: - Internal Class
 private class VideoPlayer: UIView {
     
@@ -148,7 +206,7 @@ private class VideoPlayer: UIView {
         return AVPlayerLayer.self
     }
     
-    private var playerLayer: AVPlayerLayer {
+    var playerLayer: AVPlayerLayer {
         return layer as! AVPlayerLayer
     }
     

@@ -14,6 +14,7 @@
             <connections>
                 <outlet property="activityIndicator" destination="0SE-0i-Wfz" id="0Bh-WJ-Lvc"/>
                 <outlet property="playPauseButton" destination="Vup-gD-qlf" id="YA8-e9-caO"/>
+                <outlet property="safePinchRecognizerView" destination="wU9-AZ-gKL" id="l71-3g-WWk"/>
                 <outlet property="thumbnailImageView" destination="mjQ-Fq-atE" id="vUe-b6-SPc"/>
             </connections>
         </placeholder>
@@ -22,7 +23,10 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="211"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="mjQ-Fq-atE">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wU9-AZ-gKL">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="211"/>
+                </view>
+                <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="mjQ-Fq-atE">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="211"/>
                 </imageView>
                 <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="0SE-0i-Wfz">
@@ -48,8 +52,12 @@
                 <constraint firstItem="mjQ-Fq-atE" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="QuO-fq-rtS"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="Vup-gD-qlf" secondAttribute="bottom" constant="16" id="TDt-2U-NUd"/>
                 <constraint firstItem="Vup-gD-qlf" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="16" id="WLo-23-f8e"/>
+                <constraint firstAttribute="bottom" secondItem="wU9-AZ-gKL" secondAttribute="bottom" id="Zba-vn-f8c"/>
                 <constraint firstItem="mjQ-Fq-atE" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="a16-tR-lGe"/>
                 <constraint firstItem="0SE-0i-Wfz" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="jiu-bX-MEq"/>
+                <constraint firstItem="wU9-AZ-gKL" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="oxo-Of-hxu"/>
+                <constraint firstAttribute="trailing" secondItem="wU9-AZ-gKL" secondAttribute="trailing" id="uxh-76-l1U"/>
+                <constraint firstItem="wU9-AZ-gKL" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="xmG-ZJ-k7S"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
