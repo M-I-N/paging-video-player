@@ -67,15 +67,21 @@
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="75h-DP-sGn" firstAttribute="leading" secondItem="iol-3E-WO4" secondAttribute="leading" id="0gF-Fp-lSI"/>
+                            <constraint firstItem="75h-DP-sGn" firstAttribute="leading" secondItem="iol-3E-WO4" secondAttribute="leading" priority="750" id="0gF-Fp-lSI"/>
                             <constraint firstItem="75h-DP-sGn" firstAttribute="top" secondItem="iol-3E-WO4" secondAttribute="top" id="47K-Vc-M9d"/>
+                            <constraint firstItem="75h-DP-sGn" firstAttribute="leading" secondItem="z0C-Pp-tY6" secondAttribute="leading" priority="250" id="8ow-iy-gs3"/>
                             <constraint firstAttribute="bottom" secondItem="75h-DP-sGn" secondAttribute="bottom" id="BQh-DH-pin"/>
-                            <constraint firstItem="iol-3E-WO4" firstAttribute="trailing" secondItem="75h-DP-sGn" secondAttribute="trailing" id="Ite-vl-Dba"/>
+                            <constraint firstItem="iol-3E-WO4" firstAttribute="trailing" secondItem="75h-DP-sGn" secondAttribute="trailing" priority="750" id="Ite-vl-Dba"/>
+                            <constraint firstAttribute="trailing" secondItem="75h-DP-sGn" secondAttribute="trailing" priority="250" id="kFz-Jz-VzJ"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="iol-3E-WO4"/>
                     </view>
                     <connections>
                         <outlet property="videoPlayerView" destination="75h-DP-sGn" id="kb9-sq-n3J"/>
+                        <outletCollection property="videoPlayerViewNormalSizedConstraints" destination="0gF-Fp-lSI" collectionClass="NSMutableArray" id="eNV-Vc-n3K"/>
+                        <outletCollection property="videoPlayerViewStretchedSizedConstraints" destination="8ow-iy-gs3" collectionClass="NSMutableArray" id="1tL-DN-2nI"/>
+                        <outletCollection property="videoPlayerViewStretchedSizedConstraints" destination="kFz-Jz-VzJ" collectionClass="NSMutableArray" id="NTd-dT-7qg"/>
+                        <outletCollection property="videoPlayerViewNormalSizedConstraints" destination="Ite-vl-Dba" collectionClass="NSMutableArray" id="olr-5T-clF"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Cfz-vX-VxM" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -85,7 +91,6 @@
         <!--Navigation Controller-->
         <scene sceneID="QUK-mL-hx6">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="hGl-zw-rgj" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Ffm-QM-ftF" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="tr7-RD-umA">
@@ -97,6 +102,7 @@
                         <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="ogh-MD-BnH"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hGl-zw-rgj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="210" y="133"/>
         </scene>
