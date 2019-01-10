@@ -16,13 +16,11 @@ class VideoPlayerViewController: UIViewController {
     
     @IBOutlet private var videoPlayerViewNormalSizedConstraints: [NSLayoutConstraint]!
     @IBOutlet private var videoPlayerViewStretchedSizedConstraints: [NSLayoutConstraint]!
-    // TODO:- Declare a Bool that will track if view disappeared or not, actually
     
     override func viewDidLoad() {
         super.viewDidLoad()
         videoPlayerView.allowAutoPlay = true
         videoPlayerView.needsStretchingBlock = { [unowned self] shouldStretch in
-            self.view.layoutIfNeeded()
             if shouldStretch {
                 self.videoPlayerViewStretchedSizedConstraints.forEach { $0.priority = .defaultHigh }
                 self.videoPlayerViewNormalSizedConstraints.forEach { $0.priority = .defaultLow }
@@ -34,20 +32,18 @@ class VideoPlayerViewController: UIViewController {
         }
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
-        // TODO:- If view disappeared actually then again provide the video
         if let video = video {
             videoPlayerView.video = video
         }
         
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         
-        // TODO:- Track if view disappeared or not, actually
         videoPlayerView.video = nil
     }
     

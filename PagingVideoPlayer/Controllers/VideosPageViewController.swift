@@ -18,6 +18,13 @@ class VideosPageViewController: UIPageViewController {
         let videoPlayerViewController = VideoPlayerViewController.instantiateFromStoryboard()
         videoPlayerViewController.video = videos.first
         setViewControllers([videoPlayerViewController], direction: .forward, animated: true, completion: nil)
+        
+        // get control of the pan gesture of UIPageViewController so that paging can be enabled/disabled for specific needs
+        if let underlyingScrollView = view.subviews.compactMap({ $0 as? UIScrollView }).first {
+            let pangestureRecognizer = UIPanGestureRecognizer()
+            pangestureRecognizer.delegate = self
+            underlyingScrollView.addGestureRecognizer(pangestureRecognizer)
+        }
     }
     
 }
@@ -58,4 +65,10 @@ extension VideosPageViewController: UIPageViewControllerDataSource {
         
     }
     
+}
+
+extension VideosPageViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return UIApplication.shared.statusBarOrientation.isPortrait
+    }
 }
